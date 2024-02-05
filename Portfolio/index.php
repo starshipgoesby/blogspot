@@ -31,7 +31,7 @@
               <a class="nav-link" href="#">Gallery</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Blog</a>
+              <a class="nav-link" href="../blog/blogpage.php">Blog</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">My Inventory</a>
