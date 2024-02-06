@@ -1,3 +1,23 @@
+<?php
+require_once('./koneksi.php');
+
+// Fungsi untuk mendapatkan daftar posting
+function getCategory()
+{
+    $conn = connectDB();
+    $query = "SELECT * FROM categories";
+    $result = $conn->query($query);
+    $categories = $result->fetch_all(MYSQLI_ASSOC);
+    $conn->close();
+    return $categories;
+}
+
+$categories = getCategory();
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,7 +49,12 @@
                             <div class="col-12">
                                 <label for="category-post" class="form-label">Category</label>
                                 <select id="category-post" name="category-post" class="form-select" required>
-                                    <option value="1" selected>Cosmetic</option>
+                                    <?php foreach ($categories as $category) : ?>
+                                        <option value="<?php echo $category['category_id']; ?>">
+                                            <?php echo $category['name']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+
                                 </select>
                             </div>
                             <div class="form-floating">

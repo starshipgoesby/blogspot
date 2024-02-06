@@ -40,7 +40,7 @@ $posts = getPosts();
                 <nav>
                     <ul>
                         <li><a href="blogpage.php"> Blog</a></li>
-                        <li><a href="show_category.php">Edit Post</a></li> 
+                        <li><a href="show_category.php">Edit Category</a></li> 
                     </ul>
                 </nav>
 

@@ -3,17 +3,17 @@
 require_once('./koneksi.php');
 
 // Fungsi untuk mendapatkan daftar posting
-function getPosts()
+function getCategory()
 {
     $conn = connectDB();
-    $query = "SELECT * FROM post";
+    $query = "SELECT * FROM categories";
     $result = $conn->query($query);
-    $posts = $result->fetch_all(MYSQLI_ASSOC);
+    $categories = $result->fetch_all(MYSQLI_ASSOC);
     $conn->close();
-    return $posts;
+    return $categories;
 }
 
-$posts = getPosts();
+$categories = getCategory();
 
 
 ?>
@@ -47,46 +47,105 @@ $posts = getPosts();
                         <!-- <li><a href="./todo.html">To Do List</a></li> -->
                     </ul>
                 </nav>
-
-                <div class="burger">
-                    <div class="garis-1"></div>
-                    <div class="garis-2"></div>
-                    <div class="garis-3"></div>
-                </div>
-            </div>
-            <div class="login-container">
-                <div class="container mt-5">
-                    <h2>Post</h2>
-                    <a href="" class="btn btn-warning btn-sm">Add Category</a>
-                    <table class="table table-striped table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($posts as $index => $post) : ?>
-                                <tr>
-                                    <td><?php echo $index + 1; ?></td>
-                                    <td><?php echo $post['category']; ?></td>
-                                    <td>
-                                        <!-- Edit button (replace # with actual edit page URL) -->
-                                        <a href="edit_post.php?id=<?php echo $post['post_id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-
-                                        <!-- Delete button (replace # with actual delete page URL) -->
-                                        <a href="delete_post.php?id=<?php echo $post['post_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this post?')">Delete</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                    
-                </div>
             </div>
         </div>
     </header>
+    <div class="login-container">
+        <div class="container mt-5">
+            <h2>Categories</h2>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Add Category
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Add Category Form -->
+                            <form action="add_category.php" method="POST">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Category Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+
+                                <!-- Add other form fields if needed -->
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-warning btn-sm">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($categories as $index => $category) : ?>
+                        <tr>
+                            <td><?php echo $index + 1; ?></td>
+                            <td><?php echo $category['name']; ?></td>
+                            <td>
+                                <!-- Edit button (replace # with actual edit page URL) -->
+                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $category['category_id']; ?>">
+                                    Edit Category
+                                </button>
+
+                                <!-- Modal -->
+                                <!-- Edit Modal -->
+                                <div class="modal fade" id="editModal<?php echo $category['category_id']; ?>" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="edit_category.php" method="POST">
+                                                    <input type="hidden" name="category_id" value="<?php echo $category['category_id']; ?>">
+                                                    <div class="mb-3">
+                                                        <label for="name" class="form-label">Category Name</label>
+                                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo $category['name']; ?>" required>
+                                                    </div>
+
+                                                    <!-- Add other form fields if needed -->
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-warning btn-sm">Save changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Delete button (replace # with actual delete page URL) -->
+                                <a href="delete_category.php?id=<?php echo $category['category_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category?')">Delete</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
 </body>
 
 <footer>
@@ -113,6 +172,6 @@ $posts = getPosts();
     <p>&#169; 2024 - Made by Mouziki</p>
 </footer>
 </body>
-<script src="./script/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </html>
